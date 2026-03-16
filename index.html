@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virtual Stock Game MVP</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Virtual Stock Game (MVP)</h1>
+      <p>In-game currency only. No real broker actions.</p>
+      <p class="muted">Provider mode: <code>?provider=auto</code> (default, TWSE→mock fallback) or <code>?provider=mock</code>.</p>
+    </header>
+
+    <main class="grid">
+      <section class="card" id="portfolio-summary"></section>
+
+      <section class="card">
+        <h2>Market</h2>
+        <p class="muted">Refreshes every 3 seconds.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Name</th>
+              <th>Last</th>
+              <th>Change</th>
+              <th>Change %</th>
+              <th>Timestamp</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="stock-table-body"></tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Trade Ticket</h2>
+        <form id="trade-form">
+          <label>
+            Symbol
+            <select name="symbol" id="trade-symbol"></select>
+          </label>
+          <label>
+            Side
+            <select name="side">
+              <option value="buy">Buy</option>
+              <option value="sell">Sell</option>
+            </select>
+          </label>
+          <label>
+            Quantity
+            <input type="number" name="quantity" min="1" value="1" required />
+          </label>
+          <button type="submit">Submit Trade</button>
+        </form>
+        <p id="trade-feedback" class="muted"></p>
+      </section>
+
+      <section class="card">
+        <h2>Daily Prediction Bet</h2>
+        <p id="prediction-question"></p>
+        <form id="prediction-form">
+          <label>
+            Pick
+            <select name="prediction" required>
+              <option value="green">Green (close up)</option>
+              <option value="red">Red (close down)</option>
+            </select>
+          </label>
+          <label>
+            Wager (coins)
+            <input type="number" name="wager" min="1" value="100" required />
+          </label>
+          <button type="submit">Place Bet</button>
+          <button type="button" id="settle-day">Settle Day (demo)</button>
+        </form>
+        <div id="prediction-status" class="muted"></div>
+      </section>
+
+      <section class="card">
+        <h2>Holdings</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Qty</th>
+              <th>Avg Cost</th>
+              <th>Market Value</th>
+              <th>Unrealized P&L</th>
+            </tr>
+          </thead>
+          <tbody id="holdings-body"></tbody>
+        </table>
+      </section>
+
+      <section class="card">
+        <h2>Trade History</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Side</th>
+              <th>Symbol</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="trade-history-body"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
