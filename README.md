@@ -1,41 +1,40 @@
-# Virtual Stock Game MVP
+# 虛擬股票遊戲 MVP
 
-Browser-playable simulated stock trading game using **in-game currency only**.
+可在瀏覽器遊玩的模擬股票交易遊戲，**僅使用遊戲幣**。
 
-## Recommended first Taiwan stock data source
-**TWSE public endpoints (MIS realtime + TWSE official daily report)** are the best first integration target.
+## TWSE STOCK_DAY 欄位對應（已確認）
+`/api/twse/official-close` 使用 TWSE `STOCK_DAY` 的每日資料列 `row`：
 
-Why this is the best first step:
-- No API key required for early integration/prototyping.
-- Native Taiwan exchange data shape (easy mapping for 2330/2317/etc.).
-- Supports both near-realtime quote pull and official daily close retrieval.
-- Lets us ship now with fallback behavior and switch to stricter/paid providers later if needed.
+- `row[0]`：日期（民國年，例如 `114/03/14`）
+- `row[1]`：成交股數
+- `row[2]`：成交金額
+- `row[3]`：開盤價
+- `row[4]`：最高價
+- `row[5]`：最低價
+- `row[6]`：**收盤價（本專案用於 closePrice）**
+- `row[7]`：漲跌價差
+- `row[8]`：成交筆數
 
-## Features
-- Mock market data stream fallback (no API key needed)
-- First real-data adapter for Taiwan stocks (TWSE)
-- Small local proxy to avoid browser-side TWSE CORS failures
-- Buy/sell flow with wallet checks, holdings updates, and trade history
-- Portfolio metrics: wallet, holdings value, realized/unrealized/total P&L
-- Daily binary prediction bet:
-  - Example prompt: "Will TSMC (2330) close red or green today?"
-  - Place wager in coins
-  - Settlement path designed to use official close data
+> 目前官方收盤價對應已修正為 `closePrice`，並同步回傳 `lastPrice` / `previousClose`（皆以當日收盤價填入，供前端相容使用）。
 
-## Market data architecture
+## 功能
+- 模擬報價（mock）可單獨遊玩，不依賴任何 API key
+- 自動模式（auto）優先走 TWSE 本地 proxy，失敗時自動切回 mock
+- 買進 / 賣出、持倉、已實現與未實現損益
+- 每日二選一預測（收紅/收黑）與示範結算
+
+## 架構
 - `src/providers/marketDataProvider.js`
-  - `MarketDataProvider` base interface
-  - `MockMarketDataProvider` fallback implementation
-  - `FallbackMarketDataProvider` wrapper (`primary -> fallback`)
+  - `MarketDataProvider` 基礎介面
+  - `MockMarketDataProvider` 模擬報價
+  - `FallbackMarketDataProvider`（primary -> fallback）
 - `src/providers/taiwanStockProvider.js`
-  - `TaiwanTwseMarketDataProvider` (now reads through local proxy)
+  - `TaiwanTwseMarketDataProvider`（改走本地 proxy）
 - `proxy/server.js`
-  - local proxy routes:
-    - `/api/twse/realtime?symbols=...`
-    - `/api/twse/official-close?symbol=...&date=...`
+  - `/api/twse/realtime?symbols=...`
+  - `/api/twse/official-close?symbol=...&date=...`
 
-### Quote fields required by game
-Each provider returns this normalized quote shape:
+### 前端統一報價欄位
 - `symbol`
 - `name`
 - `lastPrice`
@@ -44,35 +43,39 @@ Each provider returns this normalized quote shape:
 - `previousClose`
 - `timestamp`
 
-## Provider switching
-Use URL query parameter:
-- `?provider=auto` (default): try TWSE provider first, fallback to mock if unavailable
-- `?provider=mock`: force mock provider only
+## 本地執行方式
+請開兩個終端機：
 
-## Run locally
-Open two terminals in project root.
-
-### Terminal 1: start proxy
+### 終端機 1：啟動 proxy
 ```bash
 npm run start:proxy
 ```
 
-### Terminal 2: start frontend
+### 終端機 2：啟動前端
 ```bash
 npm run start:frontend
 ```
 
-Then open:
+開啟：
 - `http://localhost:4173/?provider=auto`
-- or `http://localhost:4173/?provider=mock`
+- `http://localhost:4173/?provider=mock`
 
-## Prediction settlement path
-The UI currently settles with:
-1. `market.getOfficialClose(symbol)` (through proxy in auto mode)
-2. fallback to current snapshot price if official close lookup is unavailable
+## 本地測試建議
+### 1) 即時報價 proxy
+```bash
+curl "http://localhost:8787/api/twse/realtime?symbols=2330,2317"
+```
 
-This keeps gameplay unblocked while preparing for official-close settlement in production.
+### 2) 官方收盤 endpoint
+```bash
+curl "http://localhost:8787/api/twse/official-close?symbol=2330&date=2026-03-13"
+```
 
-## What remains mock
-- `?provider=mock` always uses simulated quotes.
-- In `?provider=auto`, if proxy or TWSE upstream is down, app transparently falls back to mock data.
+### 3) 中文介面
+開啟前端後確認：
+- 標題、按鈕、欄位名稱皆為繁體中文
+- 錢包/持倉/損益/交易紀錄/預測與結算文字皆為繁中
+
+## 仍屬 mock 的部分
+- `?provider=mock`：永遠使用模擬資料
+- `?provider=auto`：若 proxy 或 TWSE 上游不可用，會自動使用 mock 備援，保持可玩

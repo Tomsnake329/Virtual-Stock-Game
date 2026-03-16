@@ -88,16 +88,18 @@ const server = http.createServer(async (req, res) => {
         return json(res, 404, { error: `No close data for symbol ${symbol} on ${date}` });
       }
 
-      const previousClose = Number(String(row[6]).replace(/,/g, ''));
-      const lastPrice = previousClose;
+      // STOCK_DAY columns: [0]日期 [1]成交股數 [2]成交金額 [3]開盤價 [4]最高價 [5]最低價 [6]收盤價 [7]漲跌價差 [8]成交筆數
+      const closePrice = Number(String(row[6]).replace(/,/g, ''));
+      const quoteTime = new Date(`${date}T13:30:00+08:00`).toISOString();
       return json(res, 200, {
         symbol,
-        name: payload.title || symbol,
-        lastPrice,
+        name: symbol,
+        lastPrice: closePrice,
         change: 0,
         changePercent: 0,
-        previousClose,
-        timestamp: new Date().toISOString(),
+        previousClose: closePrice,
+        timestamp: quoteTime,
+        closePrice,
         source: 'twse-STOCK_DAY',
         isOfficial: true
       });
