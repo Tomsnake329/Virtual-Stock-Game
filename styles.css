@@ -1,0 +1,99 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f172a;
+  --card: #111827;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --green: #22c55e;
+  --red: #ef4444;
+  --accent: #38bdf8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+}
+
+header {
+  padding: 1rem 1.5rem;
+}
+
+h1,
+h2,
+p {
+  margin: 0.4rem 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  padding: 1rem 1.5rem 2rem;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 0.8rem;
+  padding: 1rem;
+  border: 1px solid #1f2937;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  border-bottom: 1px solid #1f2937;
+  padding: 0.4rem;
+}
+
+label,
+button,
+input,
+select {
+  display: block;
+  width: 100%;
+  margin: 0.35rem 0;
+}
+
+button {
+  cursor: pointer;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.45rem 0.6rem;
+}
+
+button#settle-day {
+  background: #7c3aed;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.green {
+  color: var(--green);
+}
+
+.red {
+  color: var(--red);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
