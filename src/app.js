@@ -47,6 +47,12 @@ function signedFmt(num, suffix = '') {
   return `${sign}${fmt(value)}${suffix}`;
 }
 
+function moveArrow(stock) {
+  if (stock.priceMove === 'up') return '▲';
+  if (stock.priceMove === 'down') return '▼';
+  return '•';
+}
+
 function providerLabel() {
   if (providerMode === 'mock') {
     return '模擬資料（強制）';
@@ -101,13 +107,11 @@ function render() {
       (s) => `
       <tr>
         <td class="symbol-cell">${s.symbol}</td>
-        <td class="name-cell">
-          <div>${s.name}</div>
-          <div class="subtle-line">${quoteBadge(s)}</div>
-        </td>
+        <td class="name-cell">${s.name}</td>
         <td class="number-cell ${s.priceMove === 'up' ? 'flash-up' : s.priceMove === 'down' ? 'flash-down' : ''}">${fmt(s.lastPrice)}</td>
-        <td class="number-cell ${colorClass(s.change)}">${signedFmt(s.change)}</td>
+        <td class="number-cell ${colorClass(s.change)}"><span class="trend-arrow">${moveArrow(s)}</span>${signedFmt(s.change)}</td>
         <td class="number-cell ${colorClass(s.changePercent)}">${signedFmt(s.changePercent, '%')}</td>
+        <td class="status-cell">${quoteBadge(s)}</td>
         <td class="time-cell">${new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
         <td class="action-cell"><button data-symbol="${s.symbol}" class="quick-buy">買 1 股</button></td>
       </tr>
@@ -126,7 +130,7 @@ function render() {
             <td class="number-cell compact-qty">${h.quantity}</td>
             <td class="number-cell compact-money">${fmt(h.avgCost)}</td>
             <td class="number-cell compact-money">${fmt(h.marketValue)}</td>
-            <td class="number-cell compact-money ${colorClass(h.unrealizedPnL)}">${signedFmt(h.unrealizedPnL)}</td>
+            <td class="number-cell compact-money ${colorClass(h.unrealizedPnL)}"><span class="trend-arrow">${h.unrealizedPnL > 0 ? '▲' : h.unrealizedPnL < 0 ? '▼' : '•'}</span>${signedFmt(h.unrealizedPnL)}</td>
           </tr>
         `
           )
@@ -140,7 +144,7 @@ function render() {
             (t) => `
         <tr>
           <td class="time-cell compact-time">${new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
-          <td class="compact-side">${t.side === 'buy' ? '買進' : '賣出'}</td>
+          <td class="compact-side"><span class="side-pill ${t.side === 'buy' ? 'side-pill--buy' : 'side-pill--sell'}">${t.side === 'buy' ? '買進' : '賣出'}</span></td>
           <td class="symbol-cell compact-symbol">${t.symbol}</td>
           <td class="number-cell compact-qty">${t.quantity}</td>
           <td class="number-cell compact-money">${fmt(t.price)}</td>

@@ -28,6 +28,7 @@
                 <th class="compact-money">最新價</th>
                 <th class="compact-money">漲跌</th>
                 <th class="compact-money">漲跌幅</th>
+                <th class="compact-status">狀態</th>
                 <th class="compact-time">時間</th>
                 <th class="compact-action">操作</th>
               </tr>
@@ -81,10 +82,10 @@
         <div id="prediction-status" class="muted"></div>
       </section>
 
-      <section class="card">
+      <section class="card card--wide">
         <h2>持倉</h2>
         <div class="table-wrap">
-          <table>
+          <table class="ledger-table holdings-table">
             <thead>
               <tr>
                 <th class="compact-symbol">代號</th>
@@ -99,10 +100,10 @@
         </div>
       </section>
 
-      <section class="card">
+      <section class="card card--wide">
         <h2>交易紀錄</h2>
         <div class="table-wrap">
-          <table>
+          <table class="ledger-table trade-table">
             <thead>
               <tr>
                 <th class="compact-time">時間</th>
