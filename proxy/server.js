@@ -1,6 +1,7 @@
 import http from 'node:http';
 
 const PORT = Number(process.env.PORT || 8787);
+const latestTradeCache = new Map();
 
 function json(res, status, payload) {
   res.writeHead(status, {
@@ -16,7 +17,17 @@ function normalizeQuote(row) {
   const symbol = row.c;
   const name = row.n;
   const previousClose = Number(row.y);
-  const lastPrice = Number(row.z === '-' ? row.y : row.z);
+  const rawTradePrice = row.z;
+  const hasLiveTradePrice = rawTradePrice && rawTradePrice !== '-';
+  const cachedLastPrice = latestTradeCache.get(symbol);
+  const lastPrice = hasLiveTradePrice
+    ? Number(rawTradePrice)
+    : cachedLastPrice ?? previousClose;
+
+  if (Number.isFinite(lastPrice)) {
+    latestTradeCache.set(symbol, lastPrice);
+  }
+
   const change = lastPrice - previousClose;
   const changePercent = previousClose ? (change / previousClose) * 100 : 0;
   const timestamp = row.tlong ? new Date(Number(row.tlong)).toISOString() : new Date().toISOString();
