@@ -16,23 +16,25 @@
     <main class="grid">
       <section class="card" id="portfolio-summary"></section>
 
-      <section class="card">
+      <section class="card card--wide">
         <h2>市場報價</h2>
         <p class="muted">每 3 秒更新一次。</p>
-        <table>
-          <thead>
-            <tr>
-              <th>代號</th>
-              <th>名稱</th>
-              <th>最新價</th>
-              <th>漲跌</th>
-              <th>漲跌幅</th>
-              <th>時間</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody id="stock-table-body"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table class="market-table">
+            <thead>
+              <tr>
+                <th>代號</th>
+                <th>名稱</th>
+                <th>最新價</th>
+                <th>漲跌</th>
+                <th>漲跌幅</th>
+                <th>時間</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="stock-table-body"></tbody>
+          </table>
+        </div>
       </section>
 
       <section class="card">
@@ -65,8 +67,8 @@
           <label>
             方向
             <select name="prediction" required>
-              <option value="green">收紅（上漲）</option>
-              <option value="red">收黑（下跌）</option>
+              <option value="red">收紅（上漲）</option>
+              <option value="green">收黑（下跌）</option>
             </select>
           </label>
           <label>
@@ -81,35 +83,39 @@
 
       <section class="card">
         <h2>持倉</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>代號</th>
-              <th>股數</th>
-              <th>均價</th>
-              <th>市值</th>
-              <th>未實現損益</th>
-            </tr>
-          </thead>
-          <tbody id="holdings-body"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>代號</th>
+                <th>股數</th>
+                <th>均價</th>
+                <th>市值</th>
+                <th>未實現損益</th>
+              </tr>
+            </thead>
+            <tbody id="holdings-body"></tbody>
+          </table>
+        </div>
       </section>
 
       <section class="card">
         <h2>交易紀錄</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>時間</th>
-              <th>方向</th>
-              <th>代號</th>
-              <th>股數</th>
-              <th>價格</th>
-              <th>總額</th>
-            </tr>
-          </thead>
-          <tbody id="trade-history-body"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>時間</th>
+                <th>方向</th>
+                <th>代號</th>
+                <th>股數</th>
+                <th>價格</th>
+                <th>總額</th>
+              </tr>
+            </thead>
+            <tbody id="trade-history-body"></tbody>
+          </table>
+        </div>
       </section>
     </main>
 

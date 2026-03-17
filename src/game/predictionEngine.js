@@ -26,7 +26,7 @@ export class PredictionEngine {
       openPrice
     });
 
-    return { ok: true, message: `Bet placed: ${symbol} closes ${pick}.` };
+    return { ok: true, message: `已下注：${symbol} 預測收${pick === 'red' ? '紅' : '黑'}。` };
   }
 
   settleAll(closePrices) {
@@ -36,7 +36,7 @@ export class PredictionEngine {
       if (typeof close !== 'number') {
         continue;
       }
-      const outcome = close >= bet.openPrice ? 'green' : 'red';
+      const outcome = close >= bet.openPrice ? 'red' : 'green';
       const won = outcome === bet.pick;
       const payout = won ? bet.wager * this.rewardMultiplier : 0;
       const profit = payout - bet.wager;

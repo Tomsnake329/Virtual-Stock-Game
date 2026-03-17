@@ -37,7 +37,13 @@ function fmt(num) {
 }
 
 function colorClass(value) {
-  return value >= 0 ? 'green' : 'red';
+  return value >= 0 ? 'red' : 'green';
+}
+
+function signedFmt(num, suffix = '') {
+  const value = Number(num);
+  const sign = value > 0 ? '+' : '';
+  return `${sign}${fmt(value)}${suffix}`;
 }
 
 function providerLabel() {
@@ -60,9 +66,9 @@ function render() {
       <div>錢包餘額</div><strong>${fmt(portfolio.cash)} 遊戲幣</strong>
       <div>持倉市值</div><strong>${fmt(portfolio.holdingsValue)} 遊戲幣</strong>
       <div>總資產</div><strong>${fmt(portfolio.totalEquity)} 遊戲幣</strong>
-      <div>已實現損益</div><strong class="${colorClass(portfolio.realizedPnL)}">${fmt(portfolio.realizedPnL)}</strong>
-      <div>未實現損益</div><strong class="${colorClass(portfolio.unrealizedPnL)}">${fmt(portfolio.unrealizedPnL)}</strong>
-      <div>總損益</div><strong class="${colorClass(portfolio.totalPnL)}">${fmt(portfolio.totalPnL)}</strong>
+      <div>已實現損益</div><strong class="${colorClass(portfolio.realizedPnL)}">${signedFmt(portfolio.realizedPnL)}</strong>
+      <div>未實現損益</div><strong class="${colorClass(portfolio.unrealizedPnL)}">${signedFmt(portfolio.unrealizedPnL)}</strong>
+      <div>總損益</div><strong class="${colorClass(portfolio.totalPnL)}">${signedFmt(portfolio.totalPnL)}</strong>
     </div>
   `;
 
@@ -70,13 +76,13 @@ function render() {
     .map(
       (s) => `
       <tr>
-        <td>${s.symbol}</td>
-        <td>${s.name}</td>
-        <td>${fmt(s.lastPrice)}</td>
-        <td class="${colorClass(s.change)}">${fmt(s.change)}</td>
-        <td class="${colorClass(s.changePercent)}">${fmt(s.changePercent)}%</td>
-        <td>${new Date(s.timestamp).toLocaleTimeString()}</td>
-        <td><button data-symbol="${s.symbol}" class="quick-buy">買 1 股</button></td>
+        <td class="symbol-cell">${s.symbol}</td>
+        <td class="name-cell">${s.name}</td>
+        <td class="number-cell">${fmt(s.lastPrice)}</td>
+        <td class="number-cell ${colorClass(s.change)}">${signedFmt(s.change)}</td>
+        <td class="number-cell ${colorClass(s.changePercent)}">${signedFmt(s.changePercent, '%')}</td>
+        <td class="time-cell">${new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
+        <td class="action-cell"><button data-symbol="${s.symbol}" class="quick-buy">買 1 股</button></td>
       </tr>
     `
     )
@@ -89,11 +95,11 @@ function render() {
           .map(
             (h) => `
           <tr>
-            <td>${h.symbol}</td>
-            <td>${h.quantity}</td>
-            <td>${fmt(h.avgCost)}</td>
-            <td>${fmt(h.marketValue)}</td>
-            <td class="${colorClass(h.unrealizedPnL)}">${fmt(h.unrealizedPnL)}</td>
+            <td class="symbol-cell">${h.symbol}</td>
+            <td class="number-cell">${h.quantity}</td>
+            <td class="number-cell">${fmt(h.avgCost)}</td>
+            <td class="number-cell">${fmt(h.marketValue)}</td>
+            <td class="number-cell ${colorClass(h.unrealizedPnL)}">${signedFmt(h.unrealizedPnL)}</td>
           </tr>
         `
           )
@@ -106,12 +112,12 @@ function render() {
           .map(
             (t) => `
         <tr>
-          <td>${new Date(t.timestamp).toLocaleTimeString()}</td>
+          <td class="time-cell">${new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
           <td>${t.side === 'buy' ? '買進' : '賣出'}</td>
-          <td>${t.symbol}</td>
-          <td>${t.quantity}</td>
-          <td>${fmt(t.price)}</td>
-          <td>${fmt(t.total)}</td>
+          <td class="symbol-cell">${t.symbol}</td>
+          <td class="number-cell">${t.quantity}</td>
+          <td class="number-cell">${fmt(t.price)}</td>
+          <td class="number-cell">${fmt(t.total)}</td>
         </tr>
       `
           )
@@ -129,7 +135,7 @@ function render() {
     ${
       latestSettled
         ? `<div>最近一次結算：${latestSettled.symbol} ${
-            latestSettled.outcome === 'green' ? '收紅' : '收黑'
+            latestSettled.outcome === 'red' ? '收紅' : '收黑'
           }；你${latestSettled.won ? '獲勝' : '失敗'} ${fmt(Math.abs(latestSettled.profit))} 遊戲幣。</div>`
         : '<div>尚未有結算紀錄。</div>'
     }

@@ -51,7 +51,7 @@ const server = http.createServer(async (req, res) => {
 
   try {
     if (url.pathname === '/api/twse/realtime' && req.method === 'GET') {
-      const symbolsParam = url.searchParams.get('symbols') || '2330,2317,2454,2882';
+      const symbolsParam = url.searchParams.get('symbols') || '2330,2317,2454,2882,2303,2603,1301,1303,2002,2891';
       const symbols = symbolsParam
         .split(',')
         .map((x) => x.trim())

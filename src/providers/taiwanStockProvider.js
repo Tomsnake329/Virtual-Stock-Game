@@ -1,8 +1,10 @@
 import { MarketDataProvider } from './marketDataProvider.js';
 
+const DEFAULT_TWSE_SYMBOLS = ['2330', '2317', '2454', '2882', '2303', '2603', '1301', '1303', '2002', '2891'];
+
 export class TaiwanTwseMarketDataProvider extends MarketDataProvider {
   constructor({
-    symbols = ['2330', '2317', '2454', '2882'],
+    symbols = DEFAULT_TWSE_SYMBOLS,
     proxyBaseUrl = 'http://localhost:8787'
   } = {}) {
     super();
