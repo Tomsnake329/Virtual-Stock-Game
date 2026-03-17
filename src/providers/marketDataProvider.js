@@ -20,7 +20,9 @@ function normalizeQuote(raw) {
     change: Number(raw.change),
     changePercent: Number(raw.changePercent),
     previousClose: Number(raw.previousClose),
-    timestamp: raw.timestamp || new Date().toISOString()
+    timestamp: raw.timestamp || new Date().toISOString(),
+    marketStatus: raw.marketStatus || 'live',
+    marketStatusLabel: raw.marketStatusLabel || '模擬成交'
   };
 }
 
@@ -49,7 +51,9 @@ export class MockMarketDataProvider extends MarketDataProvider {
       return normalizeQuote({
         ...s,
         change,
-        changePercent: (change / s.previousClose) * 100
+        changePercent: (change / s.previousClose) * 100,
+        marketStatus: 'live',
+        marketStatusLabel: '模擬成交'
       });
     });
   }

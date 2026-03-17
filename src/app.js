@@ -31,6 +31,7 @@ const predictionStatus = document.querySelector('#prediction-status');
 const settleButton = document.querySelector('#settle-day');
 
 let stocks = [];
+let previousStocks = new Map();
 
 function fmt(num) {
   return Number(num).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 });
@@ -56,6 +57,28 @@ function providerLabel() {
   return '模擬資料備援';
 }
 
+function quoteBadge(stock) {
+  const movementClass = stock.priceMove === 'up' ? 'quote-badge--up' : stock.priceMove === 'down' ? 'quote-badge--down' : '';
+  const statusClass = stock.marketStatus === 'stale' ? 'quote-badge--stale' : stock.marketStatus === 'reference' ? 'quote-badge--reference' : 'quote-badge--live';
+  return `<span class="quote-badge ${movementClass} ${statusClass}">${stock.marketStatusLabel}</span>`;
+}
+
+function enrichStocks(nextStocks) {
+  return nextStocks.map((stock) => {
+    const prev = previousStocks.get(stock.symbol);
+    let priceMove = 'flat';
+    if (prev) {
+      if (stock.lastPrice > prev.lastPrice) priceMove = 'up';
+      else if (stock.lastPrice < prev.lastPrice) priceMove = 'down';
+    }
+    return { ...stock, priceMove };
+  });
+}
+
+function rememberStocks(list) {
+  previousStocks = new Map(list.map((stock) => [stock.symbol, stock]));
+}
+
 function render() {
   const portfolio = trading.getPortfolio(stocks.map((s) => ({ symbol: s.symbol, price: s.lastPrice })));
 
@@ -77,8 +100,11 @@ function render() {
       (s) => `
       <tr>
         <td class="symbol-cell">${s.symbol}</td>
-        <td class="name-cell">${s.name}</td>
-        <td class="number-cell">${fmt(s.lastPrice)}</td>
+        <td class="name-cell">
+          <div>${s.name}</div>
+          <div class="subtle-line">${quoteBadge(s)}</div>
+        </td>
+        <td class="number-cell ${s.priceMove === 'up' ? 'flash-up' : s.priceMove === 'down' ? 'flash-down' : ''}">${fmt(s.lastPrice)}</td>
         <td class="number-cell ${colorClass(s.change)}">${signedFmt(s.change)}</td>
         <td class="number-cell ${colorClass(s.changePercent)}">${signedFmt(s.changePercent, '%')}</td>
         <td class="time-cell">${new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
@@ -149,7 +175,9 @@ function fillSymbolDropdown() {
 }
 
 async function refreshMarket({ initial = false } = {}) {
-  stocks = initial ? await market.getSnapshot() : await market.tick();
+  const nextStocks = initial ? await market.getSnapshot() : await market.tick();
+  stocks = enrichStocks(nextStocks);
+  rememberStocks(stocks);
   if (initial) {
     fillSymbolDropdown();
   }

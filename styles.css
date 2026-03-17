@@ -147,6 +147,71 @@ button#settle-day {
   overflow-wrap: anywhere;
 }
 
+.subtle-line {
+  margin-top: 0.25rem;
+}
+
+.quote-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  background: #0b1220;
+}
+
+.quote-badge--live {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.quote-badge--stale {
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
+}
+
+.quote-badge--reference {
+  border-color: rgba(148, 163, 184, 0.45);
+  color: #cbd5e1;
+}
+
+.quote-badge--up {
+  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.18);
+}
+
+.quote-badge--down {
+  box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.18);
+}
+
+.flash-up {
+  animation: flashUp 0.9s ease;
+}
+
+.flash-down {
+  animation: flashDown 0.9s ease;
+}
+
+@keyframes flashUp {
+  0% {
+    background: rgba(239, 68, 68, 0.28);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes flashDown {
+  0% {
+    background: rgba(34, 197, 94, 0.25);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
 #trade-feedback,
 #prediction-status {
   margin-top: 0.75rem;

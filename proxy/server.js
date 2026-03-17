@@ -20,9 +20,7 @@ function normalizeQuote(row) {
   const rawTradePrice = row.z;
   const hasLiveTradePrice = rawTradePrice && rawTradePrice !== '-';
   const cachedLastPrice = latestTradeCache.get(symbol);
-  const lastPrice = hasLiveTradePrice
-    ? Number(rawTradePrice)
-    : cachedLastPrice ?? previousClose;
+  const lastPrice = hasLiveTradePrice ? Number(rawTradePrice) : cachedLastPrice ?? previousClose;
 
   if (Number.isFinite(lastPrice)) {
     latestTradeCache.set(symbol, lastPrice);
@@ -32,7 +30,17 @@ function normalizeQuote(row) {
   const changePercent = previousClose ? (change / previousClose) * 100 : 0;
   const timestamp = row.tlong ? new Date(Number(row.tlong)).toISOString() : new Date().toISOString();
 
-  return { symbol, name, lastPrice, change, changePercent, previousClose, timestamp };
+  return {
+    symbol,
+    name,
+    lastPrice,
+    change,
+    changePercent,
+    previousClose,
+    timestamp,
+    marketStatus: hasLiveTradePrice ? 'live' : cachedLastPrice != null ? 'stale' : 'reference',
+    marketStatusLabel: hasLiveTradePrice ? '剛成交' : cachedLastPrice != null ? '沿用前筆' : '參考昨收'
+  };
 }
 
 function parseDateToTwseMonth(dateKey) {
@@ -99,7 +107,6 @@ const server = http.createServer(async (req, res) => {
         return json(res, 404, { error: `No close data for symbol ${symbol} on ${date}` });
       }
 
-      // STOCK_DAY columns: [0]日期 [1]成交股數 [2]成交金額 [3]開盤價 [4]最高價 [5]最低價 [6]收盤價 [7]漲跌價差 [8]成交筆數
       const closePrice = Number(String(row[6]).replace(/,/g, ''));
       const quoteTime = new Date(`${date}T13:30:00+08:00`).toISOString();
       return json(res, 200, {
