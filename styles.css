@@ -131,6 +131,10 @@ button#settle-day {
   gap: 0.5rem;
 }
 
+.summary-note {
+  margin-top: 0.75rem;
+}
+
 .number-cell {
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -141,6 +145,31 @@ button#settle-day {
 .time-cell,
 .action-cell {
   white-space: nowrap;
+}
+
+.compact-symbol {
+  width: 72px;
+}
+
+.compact-qty {
+  width: 72px;
+}
+
+.compact-time {
+  width: 108px;
+}
+
+.compact-side {
+  width: 72px;
+  white-space: nowrap;
+}
+
+.compact-action {
+  width: 96px;
+}
+
+.compact-money {
+  min-width: 96px;
 }
 
 .name-cell {
@@ -235,12 +264,12 @@ button#settle-day {
 
   .market-table th:nth-child(1),
   .market-table td:nth-child(1) {
-    width: 8%;
+    width: 9%;
   }
 
   .market-table th:nth-child(2),
   .market-table td:nth-child(2) {
-    width: 20%;
+    width: 23%;
   }
 
   .market-table th:nth-child(3),
@@ -259,7 +288,21 @@ button#settle-day {
 
   .market-table th:nth-child(7),
   .market-table td:nth-child(7) {
-    width: 12%;
+    width: 10%;
+  }
+
+  #holdings-body td:nth-child(1),
+  #holdings-body td:nth-child(2),
+  #holdings-body td:nth-child(3),
+  #holdings-body td:nth-child(4),
+  #holdings-body td:nth-child(5),
+  #trade-history-body td:nth-child(1),
+  #trade-history-body td:nth-child(2),
+  #trade-history-body td:nth-child(3),
+  #trade-history-body td:nth-child(4),
+  #trade-history-body td:nth-child(5),
+  #trade-history-body td:nth-child(6) {
+    white-space: nowrap;
   }
 }
 

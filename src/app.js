@@ -89,10 +89,11 @@ function render() {
       <div>錢包餘額</div><strong>${fmt(portfolio.cash)} 遊戲幣</strong>
       <div>持倉市值</div><strong>${fmt(portfolio.holdingsValue)} 遊戲幣</strong>
       <div>總資產</div><strong>${fmt(portfolio.totalEquity)} 遊戲幣</strong>
-      <div>已實現損益</div><strong class="${colorClass(portfolio.realizedPnL)}">${signedFmt(portfolio.realizedPnL)}</strong>
-      <div>未實現損益</div><strong class="${colorClass(portfolio.unrealizedPnL)}">${signedFmt(portfolio.unrealizedPnL)}</strong>
-      <div>總損益</div><strong class="${colorClass(portfolio.totalPnL)}">${signedFmt(portfolio.totalPnL)}</strong>
+      <div>已實現損益</div><strong class="${colorClass(portfolio.realizedPnL)}">${signedFmt(portfolio.realizedPnL)} 遊戲幣</strong>
+      <div>未實現損益</div><strong class="${colorClass(portfolio.unrealizedPnL)}">${signedFmt(portfolio.unrealizedPnL)} 遊戲幣</strong>
+      <div>總損益</div><strong class="${colorClass(portfolio.totalPnL)}">${signedFmt(portfolio.totalPnL)} 遊戲幣</strong>
     </div>
+    <p class="muted summary-note">總資產 = 錢包餘額 + 持倉市值；損益單位同樣都是遊戲幣。</p>
   `;
 
   stockBody.innerHTML = stocks
@@ -121,11 +122,11 @@ function render() {
           .map(
             (h) => `
           <tr>
-            <td class="symbol-cell">${h.symbol}</td>
-            <td class="number-cell">${h.quantity}</td>
-            <td class="number-cell">${fmt(h.avgCost)}</td>
-            <td class="number-cell">${fmt(h.marketValue)}</td>
-            <td class="number-cell ${colorClass(h.unrealizedPnL)}">${signedFmt(h.unrealizedPnL)}</td>
+            <td class="symbol-cell compact-symbol">${h.symbol}</td>
+            <td class="number-cell compact-qty">${h.quantity}</td>
+            <td class="number-cell compact-money">${fmt(h.avgCost)}</td>
+            <td class="number-cell compact-money">${fmt(h.marketValue)}</td>
+            <td class="number-cell compact-money ${colorClass(h.unrealizedPnL)}">${signedFmt(h.unrealizedPnL)}</td>
           </tr>
         `
           )
@@ -138,12 +139,12 @@ function render() {
           .map(
             (t) => `
         <tr>
-          <td class="time-cell">${new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
-          <td>${t.side === 'buy' ? '買進' : '賣出'}</td>
-          <td class="symbol-cell">${t.symbol}</td>
-          <td class="number-cell">${t.quantity}</td>
-          <td class="number-cell">${fmt(t.price)}</td>
-          <td class="number-cell">${fmt(t.total)}</td>
+          <td class="time-cell compact-time">${new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</td>
+          <td class="compact-side">${t.side === 'buy' ? '買進' : '賣出'}</td>
+          <td class="symbol-cell compact-symbol">${t.symbol}</td>
+          <td class="number-cell compact-qty">${t.quantity}</td>
+          <td class="number-cell compact-money">${fmt(t.price)}</td>
+          <td class="number-cell compact-money">${fmt(t.total)}</td>
         </tr>
       `
           )
